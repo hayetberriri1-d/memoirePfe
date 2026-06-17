@@ -1,0 +1,308 @@
+% ============================================================
+%  08_chapitre3_conception.tex  –  Chapitre 3 : Conception de la Solution
+% ============================================================
+\chapter{Conception de la Solution}
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Ce chapitre décrit l'architecture globale d'EduBoard et sa conception détaillée. Nous
+présentons les choix architecturaux justifiés, le modèle de données, les diagrammes
+d'activité, de séquence, les diagrammes de classes et de déploiement.
+% ------------------------------------------------------------
+\section{Architecture Globale}
+
+EduBoard adopte une architecture en couches assurant une séparation claire des responsabilités.
+
+\begin{table}[H]
+  \centering
+  \caption{Architecture N-Tiers de la plateforme EduBoard}
+  \label{tab:architecture}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm} p{4cm} X}
+    \toprule
+    \textbf{Couche} & \textbf{Technologie} & \textbf{Rôle} \\
+    \midrule
+    Présentation & React.js 18 (\ac{SPA}) & Interface utilisateur, routage client, gestion de l'état \\
+    API / Métier & ASP.NET Core 8 \ac{REST} & Logique métier, controllers, services, injection de dépendances \\
+    Données & PostgreSQL 15 + EF Core 8 & Persistance, \ac{ORM}, migrations automatiques \\
+    Stockage médias & Local \texttt{persistent\_uploads} & Stockage des PDFs, vidéos et images \\
+    IA / Ext. & Anthropic, Groq, Flouci, SMTP & Feedback quiz, chatbot, paiement et emails \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Diagrammes d'Activité}
+
+\subsection{Diagramme d'Activité – Inscription et Authentification}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=0.8\textheight,keepaspectratio]{DIAGRAMME_D_ACTIVITE_-_INSCRIPTION_ET_AUTHENTIFICATION.png}
+  \caption{Diagramme d'activité – Inscription et Authentification}
+  \label{fig:act_auth}
+\end{figure}
+\noindent  Ce diagramme modélise le processus d’authentification et d’inscription sur la plateforme EduBoard, point d’entrée de l’application permettant l’accès sécurisé aux services. Il décrit le parcours d’un utilisateur depuis l’inscription ou la connexion jusqu’à l’obtention d’un token JWT et la redirection vers le tableau de bord approprié selon son rôle.
+
+\noindent Il met en évidence la validation des données, la sécurisation des mots de passe via BCrypt, la génération d’un JWT et la gestion des cas d’erreur, tout en assurant une authentification stateless adaptée à une architecture scalable.
+\subsection{Diagramme d'Activité – Achat d'un Cours}
+
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=0.8\textheight,keepaspectratio]{DIAGRAMME_D_ACTIVITE_-_ACHAT_D_UN_COURS.png}
+  \caption{Diagramme d'activité – Processus d'achat d'un cours}
+  \label{fig:act_achat}
+\end{figure}
+\noindent   Ce diagramme modélise le processus commercial d’EduBoard, couvrant l’acquisition d’un cours payant via le système de paiement Flouci, depuis la consultation du catalogue jusqu’au déblocage de l’accès au contenu pédagogique. Il formalise les étapes du tunnel d’achat, la gestion des statuts de transaction (Pending, Completed, Failed, Cancelled), l’intégration de la passerelle de paiement Flouci avec redirection et callback, ainsi qu’un mode de simulation en environnement local. L’accès au contenu est conditionné à la validation du paiement, avec envoi automatique d’un email de confirmation et séparation claire entre contrôleur, service métier et service de notification.
+
+\subsection{Diagramme d'Activité – Passage d'un Quiz}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.8\textheight,keepaspectratio]{DIAGRAMME_D_ACTIVITE_-_PASSAGE_D_UN_QUIZ.png}
+    \caption{Diagramme d'activité : Passage d'un quiz avec feedback IA}
+    \label{fig:act_quiz}
+\end{figure}
+\noindent Ce diagramme modélise le processus d’évaluation des étudiants via les quiz adaptatifs d’EduBoard, incluant le déroulement d’un quiz et l’intégration de l’API Anthropic Claude pour générer un feedback pédagogique personnalisé. Il décrit le flux complet d’une tentative de quiz : accès avec vérification des droits et des limites, navigation question par question avec enregistrement des réponses, correction automatique et calcul du score, génération d’un feedback via \textit{QuizFeedbackService} (avec fallback local), mise à jour de la progression utilisateur, et déclenchement éventuel d’un certificat en cas de réussite. Ce processus permet de transformer une évaluation classique en un accompagnement pédagogique personnalisé basé sur l’IA.
+
+\medskip
+
+\noindent Ce diagramme met en évidence un processus central du système d’évaluation d’EduBoard, combinant correction automatique et génération de feedback intelligent afin d’améliorer l’apprentissage des étudiants.
+
+% ------------------------------------------------------------
+\section{Diagrammes de Séquence}
+
+\subsection{Diagramme de Séquence – Authentification JWT}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_SEQUENCE_-_AUTHENTIFICATION_JWT.png}
+  \caption{Diagramme de séquence – Authentification JWT}
+  \label{fig:seq_auth}
+\end{figure}
+\noindent  Ce diagramme modélise le processus d’authentification basé sur JSON Web Token (JWT) dans EduBoard, illustrant les échanges entre le client React, l’API ASP.NET Core et la base de données lors d’une connexion.
+
+\medskip
+
+\noindent Il décrit le flux du endpoint \texttt{POST /api/auth/login}, depuis la soumission des identifiants jusqu’à la génération et l’utilisation du token JWT. Ce processus inclut la vérification des credentials, la création du token signé et son stockage côté client, ainsi que son injection automatique dans les requêtes protégées via le header \texttt{Authorization: Bearer}. Le diagramme met également en évidence les mécanismes de sécurité et la gestion des accès par rôle..
+\subsection{Diagramme de Séquence – Achat d'un Cours}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_SEQUENCE_-_ACHAT_D_UN_COURS.png}
+  \caption{Diagramme de séquence – Achat d'un cours}
+  \label{fig:seq_achat}
+\end{figure}
+\noindent  Ce diagramme modélise le processus de paiement dans EduBoard, depuis l’initiation de l’achat jusqu’à la confirmation de l’accès au cours via la passerelle Flouci.
+
+\medskip
+
+\noindent Il décrit le flux du tunnel d’achat incluant la création d’une transaction en statut \textit{Pending}, la redirection vers Flouci, la vérification du paiement côté serveur, puis la validation finale permettant la création de l’inscription et l’envoi d’un email de confirmation. L’accès au cours n’est accordé qu’après validation effective du paiement.
+\subsection{Diagramme de Séquence – Quiz avec Feedback IA}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_SEQUENCE_-_SOUMISSION_ET_FEEDBACK_IA_QUIZ.png}
+  \caption{Diagramme de séquence – Soumission de quiz et feedback IA (Anthropic)}
+  \label{fig:seq_quiz_ia}
+\end{figure}
+\noindent  Ce diagramme modélise la séquence d’interaction entre EduBoard et l’API Anthropic Claude pour la génération d’un feedback pédagogique personnalisé après la soumission d’un quiz, illustrant l’intégration de l’IA générative dans le cœur pédagogique de la plateforme. Il décrit le flux de traitement du endpoint \texttt{POST /api/quizzes/submit}, depuis la soumission des réponses jusqu’à l’affichage du feedback.
+
+\medskip
+
+\noindent Le processus inclut la correction automatique via \textit{EvaluationService}, la construction d’un prompt contextuel par \textit{QuizFeedbackService}, l’appel à l’API Anthropic (claude-sonnet), la réception et l’extraction du feedback, ainsi que sa persistance dans \texttt{QuizAttempt.AIFeedback}. En cas d’indisponibilité de l’API, un fallback local garantit la continuité du service avec un feedback générique basé sur le score.
+\subsection{Diagramme de Séquence – Chatbot IA}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{13_seq_chatbot_corrige.png}
+  \caption{Diagramme de séquence – Chatbot pédagogique IA (Groq)}
+  \label{fig:seq_chatbot}
+\end{figure}
+\noindent Ce diagramme modélise le fonctionnement du ChatbotWidget d’EduBoard, composant interactif permettant aux étudiants de poser des questions et d’obtenir des réponses pédagogiques en temps réel via l’API Groq.
+
+\medskip
+
+\noindent Il décrit le flux de traitement d’un message utilisateur, incluant l’enrichissement du prompt avec le contexte du cours et de la progression, l’appel au modèle LLM, puis l’affichage de la réponse. L’historique de conversation est conservé afin d’assurer une continuité contextuelle des échanges.
+\subsection{Diagramme de Séquence – Création de Cours}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_SEQUENCE_-_CREATION_DE_COURS__ENSEIGNANT_.png}
+  \caption{Diagramme de séquence – Création de cours par l'enseignant}
+  \label{fig:seq_cours}
+\end{figure}
+\noindent  Ce diagramme modélise le processus de création de contenu pédagogique dans EduBoard par un enseignant, depuis la création d’un cours jusqu’à sa publication.
+
+\medskip
+
+\noindent Il décrit les principales opérations de gestion du contenu, incluant l’ajout de modules, de leçons et de quiz, ainsi que l’upload de fichiers multimédias vers Azure Blob Storage. Chaque étape est sécurisée par un contrôle de propriété garantissant que seul l’enseignant propriétaire peut modifier son contenu.
+% ------------------------------------------------------------
+\section{Diagramme de Classes}
+
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{DIAGRAMME_DE_CLASSES__MODELE_DOMAINE_.png} \caption{Diagramme de classes – Modèle domaine EduBoard} \label{fig:classes} 
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Description des entités du modèle domaine}
+  \label{tab:entites}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Entité} & \textbf{Table SQL} & \textbf{Attributs clés} \\
+    \midrule
+    User         & Users         & Id, Name, Email, PasswordHash, Role, IsActive \\
+    Course       & Courses       & Id, Title, Price, OriginalPrice, ThumbnailUrl, Rating, TeacherId \\
+    Module       & Modules       & Id, Title, Order, CourseId \\
+    Lesson       & Lessons       & Id, Title, Content, VideoUrl, Order, ModuleId \\
+    Quiz         & Quizzes       & Id, Title, CourseId, IsPlacement, TimeLimit \\
+    Question     & Questions     & Id, Text, Type, Points, QuizId \\
+    Answer       & Answers       & Id, Text, IsCorrect, QuestionId \\
+    Purchase     & Purchases     & Id, UserId, CourseId, Amount, Status, TransactionRef \\
+    QuizAttempt  & QuizAttempts  & Id, UserId, QuizId, Score, AIFeedback, CompletedAt \\
+    Certificate  & Certificates  & Id, UserId, CourseId, PdfUrl, IssuedAt \\
+    UserProgress & UserProgress  & Id, UserId, CourseId, CompletedLessons, ProgressPercent \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Diagramme de Déploiement}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_DEPLOIEMENT.png}
+  \caption{Diagramme de déploiement – Architecture technique EduBoard}
+  \label{fig:deploiement}
+\end{figure}
+
+L'architecture de déploiement comprend quatre nœuds principaux~:
+\begin{itemize}
+  \item \textbf{Poste Client~:} Navigateur web exécutant l'application React.js (port 3000).
+  \item \textbf{Serveur d'Application~:} ASP.NET Core 8 (port 5132) avec middleware JWT,
+        CORS et fichiers statiques.
+  \item \textbf{Serveur BDD~:} PostgreSQL 15 (port 5432) avec ElearningDB.
+  \item \textbf{Services Cloud \& IA~:} Azure Blob Storage, API Anthropic, API Groq, SMTP Gmail.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Diagrammes d'États-Transitions}
+
+\subsection{Cycle de Vie d'un Cours}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{DIAGRAMME_D_ETATS-TRANSITIONS_-_CYCLE_DE_VIE_D_UN_Cours.png}
+  \caption{Diagramme d'états-transitions – Cycle de vie d'un cours}
+  \label{fig:etat_cours}
+\end{figure}
+
+\section*{Cycle de vie d’un cours (EduBoard)}
+
+Le diagramme décrit les états de maturité d’un cours pédagogique dans la plateforme EduBoard, ainsi que les transitions entre ces états et leur impact sur la visibilité dans le catalogue.
+
+\subsection*{États du cours}
+\begin{itemize}
+    \item \textbf{Brouillon} : cours en cours de création, non visible par les étudiants.
+    \item \textbf{En Révision} : cours soumis à validation par un administrateur.
+    \item \textbf{Publié} : cours accessible aux étudiants et visible dans le catalogue.
+    \item \textbf{En Mise à Jour} : cours temporairement retiré du catalogue pour modification par l’enseignant.
+    \item \textbf{Archivé} : cours retiré définitivement du catalogue, mais toujours accessible aux étudiants déjà inscrits.
+\end{itemize}
+
+\subsection*{Règles de visibilité}
+Seuls les cours ayant l’état \textbf{Publié} sont accessibles via l’API \texttt{GET /api/courses} sans authentification.  
+Les cours \textbf{Archivés} restent consultables par les étudiants déjà inscrits via leur tableau de bord, assurant la continuité pédagogique.
+
+\subsection*{Objectif}
+Ce modèle permet de structurer le processus éditorial, de définir clairement les responsabilités des acteurs à chaque transition, et de garantir une publication contrôlée ainsi qu’une modération efficace.
+
+\subsection{Cycle de Vie d'un Achat}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{DIAGRAMME_D_ETATS-TRANSITIONS_-_CYCLE_DE_VIE_D_UN_ACHAT.png}
+  \caption{Diagramme d'états-transitions – Cycle de vie d'un achat}
+  \label{fig:etat_achat}
+\end{figure}
+
+\section*{Cycle de vie d’une transaction (Purchase - EduBoard)}
+
+Ce diagramme modélise les états successifs d’une entité \textit{Purchase} dans EduBoard, depuis son initiation jusqu’à sa finalisation. Il permet de garantir l’intégrité transactionnelle et la cohérence entre le paiement et les droits d’accès des étudiants.
+
+\subsection*{États de la transaction}
+\begin{itemize}
+    \item \textbf{Pending} : état initial lors de l’initiation du paiement.
+    \item \textbf{Completed} : paiement validé par la passerelle (Flouci), déclenchant l’accès au cours.
+    \item \textbf{Failed} : paiement refusé par la passerelle de paiement.
+    \item \textbf{Cancelled} : transaction annulée par l’utilisateur avant validation.
+    \item \textbf{Refunded} : remboursement effectué par l’administrateur, entraînant la révocation de l’accès.
+\end{itemize}
+
+\subsection*{Règle métier}
+L’inscription (\textit{Enrollment}) n’est créée qu’après une transition vers l’état \textbf{Completed}.  
+Une transition de \textbf{Completed} vers \textbf{Refunded} entraîne la suppression ou la désactivation de l’inscription associée.
+
+\subsection*{Objectif}
+Ce modèle vise à prévenir les incohérences entre paiement et accès aux cours, notamment l’accès sans paiement confirmé, les doublons de paiement ou le maintien d’accès après remboursement.
+
+% ------------------------------------------------------------
+\section{Architecture Frontend React.js}
+
+\subsection{Structure de l'Application}
+
+\begin{table}[H]
+  \centering
+  \caption{Structure et routes de l'application React EduBoard}
+  \label{tab:routes}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Catégorie} & \textbf{Route} & \textbf{Composant / Description} \\
+    \midrule
+    Public      & \texttt{/}                    & LandingPage \\
+                & \texttt{/login}               & Login \\
+                & \texttt{/register}            & Register \\
+    Admin       & \texttt{/dashboard}           & AdminDashboard \\
+    Enseignant  & \texttt{/teacher-dashboard}   & TeacherDashboard \\
+                & \texttt{/teacher-courses}     & CoursesList \\
+    Étudiant    & \texttt{/student-dashboard}   & StudentDashboard \\
+                & \texttt{/quiz/:id}            & QuizDetails \\
+                & \texttt{/certificates}        & CertificatesPage \\
+    Paiement    & \texttt{/courses/:id/purchase}& CoursePurchasePage \\
+                & \texttt{/payment/success}     & PaymentSuccessPage \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Architecture des Services Backend}
+
+\begin{table}[H]
+  \centering
+  \caption{Services backend et leurs responsabilités}
+  \label{tab:services}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Service} & \textbf{Interface} & \textbf{Responsabilité} \\
+    \midrule
+    EvaluationService       & IEvaluationService       & Correction quiz, calcul score \\
+    QuizFeedbackService     & IQuizFeedbackService     & Appel API Anthropic, feedback pédagogique \\
+    ChatbotService          & –                        & Appel API Groq, conversation \\
+    RecommendationService   & IRecommendationService   & Recommandations personnalisées \\
+    ProgressService         & IProgressService         & Suivi progression par cours \\
+    CertificateService      & ICertificateService      & Génération PDF (QuestPDF) \\
+    VideoService            & IVideoService            & Upload vidéo Azure Blob \\
+    BlobStorageService      & IBlobStorageService      & Opérations Azure Blob \\
+    EmailService            & –                        & Envoi emails SMTP Gmail \\
+    BehaviorService         & IBehaviorService         & Analyse comportement étudiant \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Ce chapitre a présenté l'architecture globale d'EduBoard, les choix technologiques
+justifiés, les diagrammes \ac{UML} complets et la conception des services. Le chapitre
+suivant présente la réalisation concrète, les interfaces et les tests effectués.

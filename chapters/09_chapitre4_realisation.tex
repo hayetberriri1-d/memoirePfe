@@ -1,0 +1,350 @@
+% ============================================================
+%  09_chapitre4_realisation.tex  –  Chapitre 4 : Réalisation et Tests
+% ============================================================
+\chapter{Réalisation et Tests}
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Ce chapitre présente l'environnement de développement, les interfaces réalisées pour
+chaque rôle, les fonctionnalités implémentées et les tests effectués pour valider la
+solution EduBoard.
+
+% ------------------------------------------------------------
+\section{Environnement de Travail}
+
+\subsection{Environnement Matériel}
+
+Le développement de la plateforme EduBoard a été réalisé sur une machine de
+développement aux caractéristiques techniques suivantes, permettant de faire tourner
+simultanément le frontend React.js, le backend ASP.NET Core 8, la base de données
+PostgreSQL ainsi que les outils de développement associés.
+
+\begin{table}[H]
+  \centering
+  \caption{Spécifications matérielles du poste de développement}
+  \label{tab:materiel}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    \textbf{Composant} & \textbf{Spécification} \\
+    \hline
+    Processeur           & Intel Core i9-13900H 13\textsuperscript{e} gén.\ (2,60\,GHz, 24 cœurs) \\
+    \hline
+    Mémoire RAM          & 16\,GB DDR5 \\
+    \hline
+    Carte graphique      & Intel Iris Xe Graphics \\
+    \hline
+    Stockage             & SSD NVMe 477\,GB \\
+    \hline
+    Système d'exploitation & Windows 11 Famille (Version 25H2, 64 bits) \\
+    \hline
+    Résolution écran     & 1920 $\times$ 1080 pixels \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+
+\subsection{Environnement Logiciel}
+
+Le développement d’EduBoard repose sur un ensemble cohérent d’outils et de technologies couvrant le développement, la gestion de versions, la base de données, la documentation et les services cloud. Ces choix technologiques assurent la performance, la maintenabilité et la compatibilité de la plateforme.
+
+
+\section{Technologies Utilisées}
+% ------------------------------------------------------------
+le tableau présente les principales technologies rretenus pour le développement de la plateforme EduBoard , ainsi que leurs roles respectifs au seins de l'architecture.
+
+\begin{table}[H]
+  \centering
+  \caption{Outils logiciels et environnements de développement}
+  \label{tab:logiciels}
+  \renewcommand{\arraystretch}{1.35}
+  \begin{tabularx}{\textwidth}{|l|l|X|}
+    \hline
+    \textbf{Outil} & \textbf{Version} & \textbf{Rôle dans le projet} \\
+    \hline
+    Visual Studio Code     & 1.90+     & Éditeur pour le frontend React.js avec
+                                         extensions TypeScript, ESLint, Prettier
+                                         et GitLens. \\
+    \hline
+    React.js                & 18    & Développement de l’interface utilisateur avec React, gestion des dépendances à l’aide de npm et utilisation de Vite comme outil de développement et de génération des builds.. \\
+    \hline
+    .NET               & 8.0       & Framework backend pour le développement
+                                         de l'\ac{API} \ac{REST} ASP.NET Core,
+                                         compilation et publication. \\
+    \hline
+    PostgreSQL             & 15        & Système de gestion de \ac{BDD} relationnelle
+                                         pour la persistance des données EduBoard. \\
+    \hline
+    pgAdmin 4              & 7.x       & Interface graphique d'administration et de
+                                         requêtage PostgreSQL. \\
+    \hline
+    Git / GitHub           & --        & Gestion de versions avec GitFlow (branches
+                                         feature, pull requests, historique du code). \\
+    \hline
+    Swagger / OpenAPI      & 3.0       & Documentation interactive de l'\ac{API}
+                                         \ac{REST}, accessible via \texttt{/swagger}. \\
+   
+                                         
+    \hline
+    PlantUML               & --        & Génération des diagrammes \ac{UML} du
+                                         système (activité, séquence, classes). \\
+    \hline
+  \end{tabularx}
+\end{table}
+\section{Language de développement}
+
+\noindent\textbf{Figma :}
+est un outil de conception graphique vectoriel. Figma a été déployé en amont
+du code pour concevoir le design global de l'application. Il a permis
+de créer les maquettes haute fidélité.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.2\textwidth]{figures/images/figma (1).png}
+\caption{Logo Figma}
+\label{fig:figma}
+\end{figure}
+
+  %\item \includegraphics[height=0.8cm]{images/vscode.png}
+  \textbf{Visual Studio Code (1.90+)} : éditeur utilisé pour le développement du frontend React.js avec support TypeScript et extensions dédiées.
+
+  %\item \includegraphics[height=0.8cm]{images/nodejs.png}
+  \textbf{Node.js (20 LTS)} : environnement d’exécution JavaScript utilisé pour le frontend et la gestion des dépendances npm.
+
+  %\item \includegraphics[height=0.8cm]{images/postgresql.png}
+  \textbf{PostgreSQL (15)} : système de gestion de base de données relationnelle utilisé pour stocker les données de la plateforme.
+
+  %\item \includegraphics[height=0.8cm]{images/pgadmin.png}
+  \textbf{pgAdmin 4 (7.x)} : outil d’administration graphique de la base de données PostgreSQL.
+
+  %\item \includegraphics[height=0.8cm]{images/github.png}
+  \textbf{Git / GitHub} : gestion de versions et collaboration via GitFlow (branches, pull requests, suivi du code).
+
+  %\item \includegraphics[height=0.8cm]{images/dotnet.png}
+  \textbf{.NET SDK (8.0)} : framework backend utilisé pour le développement de l’API REST ASP.NET Core.
+
+  %\item \includegraphics[height=0.8cm]{images/swagger.png}
+  \textbf{Swagger / OpenAPI (3.0)} : outil de documentation et de test interactif des API REST.
+
+  %\item \includegraphics[height=0.8cm]{images/plantuml.png}
+  \textbf{PlantUML} : outil de modélisation UML utilisé pour générer les diagrammes du système.
+
+  %\item \includegraphics[height=0.8cm]{images/docker.png}
+  \textbf{Docker} : conteneurisation des services pour assurer un déploiement reproductible.
+\end{itemize}
+% ------------------------------------------------------------
+\subsection{Page d'Accueil (Landing Page)}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{capture_landing.png}
+  \caption{Page d'accueil de la plateforme EduBoard (Landing Page)}
+  \label{fig:landing}
+\end{figure}
+
+\vspace{1cm}
+
+\subsection{Authentification – Connexion et Inscription}
+
+\begin{figure}[H]
+  \centering
+
+  % -------- Login --------
+  \begin{subfigure}[b]{0.95\textwidth}
+    \centering
+    \includegraphics[width=0.95\textwidth]{capture_login.png}
+    \caption{Page de connexion}
+  \end{subfigure}
+  \hfill
+
+  % -------- Register --------
+  \begin{subfigure}[b]{0.95\textwidth}
+    \centering
+    \includegraphics[width=0.95\textwidth]{capture_register.png}
+    \caption{Page d'inscription}
+  \end{subfigure}
+
+  \caption{Interfaces d'authentification de la plateforme EduBoard}
+  \label{fig:auth}
+\end{figure}
+
+\subsection{Tableau de Bord Étudiant}
+
+\begin{figure}[H]
+  \centering
+
+  % -------- Image 1 --------
+  \begin{subfigure}[b]{0.95\textwidth}
+    \centering
+    \includegraphics[width=0.95\textwidth]{capture_student_dashboard.png}
+    \caption{Dashboard étudiant – vue principale}
+  \end{subfigure}
+
+  \vspace{0.8cm}
+
+  % -------- Image 2 --------
+  \begin{subfigure}[b]{0.95\textwidth}
+    \centering
+    \includegraphics[width=0.95\textwidth]{capture_student_dashboard2.png}
+    \caption{Dashboard étudiant – vue secondaire}
+  \end{subfigure}
+
+  \caption{Tableau de bord étudiant (\texttt{/student-dashboard})}
+  \label{fig:dashboard_etudiant}
+\end{figure}
+
+\subsection{Tableau de Bord Enseignant}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{interfaceteacher1.png}
+    \caption{Dashboard enseignant – vue 1}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{interfaceteacher2.png}
+    \caption{Dashboard enseignant – vue 2}
+  \end{subfigure}
+  \caption{Tableau de bord Enseignant (\texttt{/teacher-dashboard})}
+  \label{fig:dashboard_enseignant}
+\end{figure}
+
+\subsection{Tableau de Bord Administrateur}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{capture_admin_dashboard.png}
+  \caption{Tableau de bord Administrateur (\texttt{/dashboard})}
+  \label{fig:dashboard_admin}
+\end{figure}
+
+\subsection{Catalogue et Détail de Cours}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{capture_courses_list.png}
+    \caption{Catalogue des cours}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{capture_course_detail.png}
+    \caption{Détail d'un cours}
+  \end{subfigure}
+  \caption{Interfaces de gestion des cours}
+  \label{fig:cours}
+\end{figure}
+
+\subsection{Interface de Passage de Quiz avec Feedback IA}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{capture_quiz_passage.png}
+    \caption{Passage du quiz}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{capture_quiz_result.png}
+    \caption{Résultats et feedback IA}
+  \end{subfigure}
+  \caption{Interface de quiz avec feedback IA (Anthropic Claude)}
+  \label{fig:quiz}
+\end{figure}
+
+\subsection{Chatbot Pédagogique IA}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{capture_chatbot.png}
+  \caption{ChatbotWidget – Assistant pédagogique IA (Groq)}
+  \label{fig:chatbot}
+\end{figure}
+
+\subsection{Processus de Paiement}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{capture_payment.png}
+    \caption{Page de paiement}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{capture_payment_success.png}
+    \caption{Page de succès paiement}
+  \end{subfigure}
+  \caption{Interfaces du processus de paiement}
+  \label{fig:paiement}
+\end{figure}
+
+\subsection{Certificats}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{capture_certificates.png}
+  \caption{Page des certificats (\texttt{/certificates}) avec téléchargement PDF}
+  \label{fig:certificats}
+\end{figure}
+
+% ------------------------------------------------------------
+\section{Tests}
+
+\subsection{Tests Fonctionnels}
+
+\begin{table}[H]
+  \centering
+  \caption{Résultats des tests fonctionnels principaux}
+  \label{tab:tests}
+  \begin{tabularx}{\textwidth}{lllc}
+    \toprule
+    \textbf{Scénario testé} & \textbf{Endpoint} & \textbf{Résultat attendu} & \textbf{Statut} \\
+    \midrule
+    Inscription utilisateur     & POST \texttt{/api/auth/register}     & 201 Created         & \checkmark \\
+    Connexion valide            & POST \texttt{/api/auth/login}         & 200 + JWT           & \checkmark \\
+    Connexion invalide          & POST \texttt{/api/auth/login}         & 401                 & \checkmark \\
+    Création cours              & POST \texttt{/api/courses}            & 201 Created         & \checkmark \\
+    Upload vidéo                & POST \texttt{/api/lessons}            & 201 + URL           & \checkmark \\
+    Passage quiz                & POST \texttt{/api/quizzes/submit}     & 200 + score         & \checkmark \\
+    Feedback IA Anthropic       & Via QuizFeedbackService               & Texte feedback      & \checkmark \\
+    Achat cours (succès)        & POST \texttt{/api/purchases}          & 200 Completed       & \checkmark \\
+    Achat cours (échec)         & POST \texttt{/api/purchases}          & 400 Failed          & \checkmark \\
+    Génération certificat PDF   & Via CertificateService                & PDF généré          & \checkmark \\
+    Chatbot réponse             & POST \texttt{/api/chatbot/message}    & 200 + réponse       & \checkmark \\
+    Recommandations             & GET \texttt{/api/recommendations}     & 200 + liste         & \checkmark \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Tests de Sécurité}
+
+\begin{itemize}
+  \item \textbf{Protection des routes~:} toutes les routes protégées retournent 401
+        Unauthorized sans token JWT valide.
+  \item \textbf{Autorisation par rôle~:} les routes réservées retournent 403 Forbidden
+        avec un rôle inadéquat.
+  \item \textbf{CORS~:} les origines non listées dans la politique AllowReactDev sont
+        bien rejetées.
+  \item \textbf{Hashage BCrypt~:} les mots de passe sont hashés en BDD et jamais
+        stockés en clair.
+  \item \textbf{Expiration JWT~:} le token expiré est correctement rejeté
+        (\texttt{ClockSkew = TimeSpan.Zero}).
+\end{itemize}
+
+\subsection{Tests de Performance}
+
+Des tests de charge basiques ont été effectués avec Postman Collections Runner pour
+simuler des accès concurrents. Les endpoints d'authentification et de consultation de
+cours maintiennent un temps de réponse inférieur à 500 ms pour 50 requêtes
+simultanées, satisfaisant ainsi l'exigence non fonctionnelle de performance définie
+au chapitre~2.
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Ce chapitre a présenté l'implémentation complète d'EduBoard~: environnement de
+développement, interfaces utilisateurs pour chaque rôle et résultats des tests. La
+plateforme répond à l'ensemble des besoins identifiés au chapitre~2 et constitue une
+solution innovante, robuste et scalable.

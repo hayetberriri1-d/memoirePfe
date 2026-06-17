@@ -1,0 +1,332 @@
+% ============================================================
+%  07_chapitre2_specifications.tex  –  Chapitre 2 : Spécification des Besoins
+% ============================================================
+\chapter{Spécification des Besoins}
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Ce chapitre présente l'analyse et la modélisation des exigences pour la plateforme
+EduBoard. Nous identifions les acteurs, leurs rôles, les exigences fonctionnelles et
+non fonctionnelles, puis nous les formalisons à travers des diagrammes \ac{UML}.
+
+% ------------------------------------------------------------
+\section{Identification des Acteurs}
+
+La plateforme EduBoard implique trois acteurs humains principaux et un acteur
+applicatif~:
+
+\begin{table}[H]
+  \centering
+  \caption{Description des acteurs de la plateforme EduBoard}
+  \label{tab:acteurs}
+  \begin{tabularx}{\textwidth}{|l|X|l|}
+    \hline
+    \textbf{Acteur} & \textbf{Rôle} & \textbf{Accès principal} \\
+    \hline
+    Administrateur & Supervise la plateforme, gère les utilisateurs et les contenus & \texttt{/dashboard} \\
+    \hline
+    Enseignant     & Crée et gère les cours, modules, leçons et quiz               & \texttt{/teacher-dashboard} \\
+    \hline
+    Étudiant       & Consulte, achète les cours, passe les quiz, obtient des certificats & \texttt{/student-dashboard} \\
+    \hline
+    Système \ac{IA}     & Génère feedback quiz, recommandations, répond au chatbot       & API interne \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Diagrammes de Cas d'Utilisation}
+
+\subsection{Diagramme de Cas d'Utilisation Global}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]
+  {cas_d_utilisation_sprint_1_et_2.png}
+  \caption{Diagramme de cas d'utilisation global – Plateforme EduBoard}
+  \label{fig:uc_global}
+\end{figure}
+
+\noindent  Ce diagramme offre une vue panoramique de l’ensemble des fonctionnalités proposées par la plateforme \textbf{EduBoard} ainsi que de leur répartition entre les différents acteurs du système. Il constitue le document de référence fonctionnel du projet en synthétisant tout le périmètre applicatif au sein d’un schéma unique.
+
+\medskip
+
+\noindent  Son objectif est d’identifier de manière exhaustive les cas d’utilisation du système, les acteurs qui y sont associés ainsi que les relations de dépendance de type \textit{include} et \textit{extend}, afin de garantir une couverture fonctionnelle complète et de faciliter la validation des besoins avec l’ensemble des parties prenantes.
+
+\medskip
+
+\noindent Le diagramme met en évidence quatre acteurs principaux : l’Administrateur, l’Enseignant, l’Étudiant et le Système IA. Les fonctionnalités sont organisées en cinq packages fonctionnels : Authentification, Gestion des cours, Quiz \& Évaluation, Suivi \& Progression et Administration. Il représente également l’héritage entre acteurs, où les trois rôles humains partagent des fonctionnalités communes telles que l’authentification et la gestion du profil. Les relations \textit{include} permettent de modéliser les comportements obligatoirement inclus dans d’autres cas d’utilisation, comme le fait que « Passer un quiz » nécessite préalablement de « S’authentifier ». Les relations \textit{extend} décrivent quant à elles des comportements optionnels venant enrichir un cas d’utilisation principal, à l’image de la génération d’un certificat après la complétion d’un cours.
+
+
+
+
+\medskip
+
+\noindent  Ce diagramme justifie l'architecture multi-rôles de la plateforme et fournit une vision globale des interactions entre les utilisateurs et les différents modules fonctionnels du système.
+
+\subsection{Diagramme de Cas d'Utilisation – Étudiant}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_CAS_D_UTILISATION_-_ETUDIANT.png}
+  \caption{Diagramme de cas d'utilisation – Espace Étudiant}
+  \label{fig:uc_etudiant}
+\end{figure}
+\noindent Ce diagramme de cas d'utilisation détaille le périmètre fonctionnel associé à l'acteur \textbf{Étudiant}, principal bénéficiaire de la plateforme \textbf{EduBoard}. Il représente l'ensemble du parcours d'apprentissage, depuis la découverte et l'acquisition des cours jusqu'à leur validation et l'obtention d'un certificat de réussite.
+
+\medskip
+
+\noindent  L'objectif de ce diagramme est de spécifier avec précision les actions accessibles à l'étudiant au sein de son espace dédié (\textit{/student-dashboard}), afin de servir de référence pour le développement des fonctionnalités frontend et backend qui lui sont destinées.
+
+\medskip
+
+\noindent  L'étudiant peut parcourir le catalogue des cours et consulter leurs détails, acheter un cours payant via la solution de paiement \textit{Flouci}, suivre les leçons sous différents formats (vidéos, articles et documents PDF), passer les quiz associés aux chapitres et recevoir un feedback personnalisé généré par l'intelligence artificielle. Il dispose également d'outils lui permettant de consulter sa progression globale ainsi que sa progression par cours, d'accéder à des recommandations personnalisées adaptées à son parcours, de télécharger un certificat au format PDF après la complétion d'un cours et d'interagir avec le chatbot pédagogique basé sur l'intelligence artificielle (\textit{ChatbotWidget}) pour obtenir une assistance en temps réel.
+
+\medskip
+
+\noindent  Une caractéristique essentielle de la plateforme EduBoard réside dans le verrouillage séquentiel des chapitres. L'accès à un chapitre donné est conditionné par la complétion du chapitre précédent ainsi que par la réussite du quiz correspondant. Cette contrainte, modélisée dans le diagramme à travers une relation \textit{extend}, garantit une progression pédagogique structurée et favorise l'acquisition progressive des connaissances.
+
+\subsection{Diagramme de Cas d'Utilisation – Enseignant}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_CAS_D_UTILISATION_-_ENSEIGNANT.png}
+  \caption{Diagramme de cas d'utilisation – Espace Enseignant}
+  \label{fig:uc_enseignant}
+\end{figure}
+\noindent  Ce diagramme représente le périmètre fonctionnel de l'acteur \textbf{Enseignant}, responsable de la création et de la gestion du contenu pédagogique au sein de la plateforme \textbf{EduBoard}. Il illustre les principales interactions de l'enseignant avec son espace dédié ainsi que son rôle dans l'organisation des formations.
+
+\medskip
+
+\noindent  Définir les responsabilités de l'enseignant dans le cycle de vie des cours, depuis leur création jusqu'au suivi des apprenants, afin de préciser les fonctionnalités qui lui sont accessibles.
+
+\medskip
+
+\noindent  L'enseignant peut créer et gérer des cours, organiser leur contenu en chapitres et leçons, importer des ressources pédagogiques, concevoir des quiz, publier ou dépublier des contenus, consulter les statistiques de ses formations et gérer son profil personnel.
+
+\medskip
+
+\noindent  Ce diagramme met en évidence les fonctionnalités dédiées aux enseignants et justifie l'architecture de gestion des contenus pédagogiques ainsi que les mécanismes de suivi des apprenants implémentés dans la plateforme.
+
+
+\subsection{Diagramme de Cas d'Utilisation – Administrateur}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{DIAGRAMME_DE_CAS_D_UTILISATION_-_ADMINISTRATEUR.png}
+  \caption{Diagramme de cas d'utilisation – Espace Administrateur}
+  \label{fig:uc_admin}
+\end{figure}
+\noindent  Ce diagramme représente le périmètre fonctionnel de l'acteur \textbf{Administrateur}, chargé de la supervision et de la gouvernance de la plateforme \textbf{EduBoard}. Il offre une vision globale des fonctionnalités de contrôle et de gestion accessibles depuis son tableau de bord.
+
+\medskip
+
+\noindent  Définir les responsabilités de l'administrateur en matière de gestion des utilisateurs, de supervision des contenus, de suivi des transactions et d'accès aux statistiques globales de la plateforme.
+
+\medskip
+
+\noindent  L'administrateur peut gérer les comptes utilisateurs et leurs rôles, modérer les contenus publiés, consulter les statistiques globales de la plateforme, superviser les transactions et l'historique des achats, accéder aux informations de suivi des utilisateurs et configurer les paramètres généraux du système.
+
+\medskip
+
+\noindent  Ce diagramme justifie la mise en œuvre du contrôle d'accès basé sur les rôles (\textit{RBAC}) et garantit que les fonctionnalités administratives sont exclusivement réservées aux utilisateurs disposant des autorisations appropriées.
+
+
+% ------------------------------------------------------------
+
+\section{Besoins Fonctionnels}
+
+\begin{table}[H]
+\centering
+\caption{Besoins fonctionnels de la plateforme EduBoard}
+\label{tab:bf}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{tabularx}{\textwidth}{|p{4cm}|X|}
+\hline
+\textbf{Module} & \textbf{Fonctionnalités} \\
+\hline
+
+Gestion des utilisateurs et authentification &
+Inscription des utilisateurs, connexion avec jeton \ac{JWT}, réinitialisation du mot de passe, gestion du profil, activation ou désactivation des comptes par l'administrateur et redirection selon le rôle utilisateur. \\
+\hline
+
+Gestion des cours, chapitres et leçons &
+Création et gestion des cours, organisation hiérarchique (Cours $\rightarrow$ Chapitres $\rightarrow$ Leçons), ajout de contenus pédagogiques (vidéos, articles, PDF), importation de fichiers, publication des chapitres et gestion de la progression séquentielle. \\
+\hline
+
+Évaluation et quiz intelligents &
+Création de quiz, passage des évaluations par les étudiants, correction automatique, calcul des scores, génération de feedback personnalisé par l'\ac{IA}, conservation de l'historique des tentatives et quiz de positionnement. \\
+\hline
+
+Suivi, progression et recommandations &
+Suivi de la progression des apprenants, calcul des taux de complétion, recommandations personnalisées, apprentissage adaptatif et génération automatique de certificats PDF. \\
+\hline
+
+Paiement et commerce &
+Achat de cours payants, gestion des transactions et des statuts de paiement, consultation de l'historique des achats, envoi des confirmations par email et gestion des remboursements. \\
+\hline
+
+Chatbot pédagogique IA &
+Assistant conversationnel intégré accessible depuis toutes les pages, réponses contextualisées selon le parcours de l'étudiant et conservation de l'historique des échanges durant la session. \\
+\hline
+
+\end{tabularx}
+\end{table}
+
+
+
+% ------------------------------------------------------------
+
+\begin{table}[H]
+\centering
+\caption{Besoins non fonctionnels de la plateforme EduBoard}
+\label{tab:bnf}
+
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|}
+\hline
+\textbf{Critère} & \textbf{Exigence} \\
+\hline
+
+Performance &
+Temps de réponse inférieur à 2 secondes pour les opérations standard et inférieur à 500 ms pour les lectures simples. \\
+\hline
+
+Sécurité &
+Authentification JWT, utilisation obligatoire du protocole HTTPS et hachage des mots de passe avec BCrypt. \\
+\hline
+
+Scalabilité &
+Architecture orientée services avec séparation Frontend/Backend et conteneurisation Docker. \\
+\hline
+
+Disponibilité &
+Taux de disponibilité cible supérieur à 99\% en environnement de production. \\
+\hline
+
+Compatibilité &
+Interface responsive compatible avec Chrome, Firefox, Safari ainsi que les plateformes iOS et Android. \\
+\hline
+
+Upload fichiers &
+Prise en charge de l'importation de vidéos jusqu'à 500 MB via Azure Blob Storage. \\
+\hline
+
+Maintenabilité &
+Architecture Controller--Service--Repository avec injection de dépendances. \\
+\hline
+
+\ac{CORS} &
+Origines autorisées : \texttt{localhost:3000} et \texttt{localhost:5173}. \\
+\hline
+
+Documentation \ac{API} &
+Documentation Swagger/OpenAPI intégrée et accessible via \texttt{/swagger}. \\
+\hline
+
+\end{tabularx}
+\end{table}
+
+
+
+% ------------------------------------------------------------
+\section{Description des Scénarios Principaux}
+
+\begin{table}[H]
+  \centering
+  \caption{Description textuelle du cas d'utilisation « Acheter un cours »}
+  \label{tab:sc_achat}
+  \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    Acteur principal  & Étudiant \\
+    \hline
+    Préconditions     & Étudiant authentifié, cours non encore acheté \\
+    \hline
+    Scénario nominal  &
+      1.~L'étudiant voit le bouton « Acheter » sur le cours payant.\newline
+      2.~Il clique \textrightarrow{} POST \texttt{/api/purchase/initiate}.\newline
+      3.~Le backend crée un achat en statut « Pending ».\newline
+      4.~Flouci retourne une URL de paiement.\newline
+      5.~Redirection vers la page Flouci.\newline
+      6.~Après paiement~: GET \texttt{/api/purchase/\{id\}/verify}.\newline
+      7.~Statut passe à « Completed », email envoyé. \\
+    \hline
+    Alt. 1            & Flouci non configuré (dev)~: simulation automatique \\
+    \hline
+    Alt. 2            & Paiement refusé~: statut « Failed » \\
+    \hline
+    Postconditions    & Accès au cours débloqué, chapitre 1 accessible \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+
+\subsection{Scénario : Acheter un cours}
+
+\begin{table}[H]
+  \centering
+  \caption{Description textuelle du cas d'utilisation « Acheter un cours »}
+  \label{tab:sc_achat}
+  \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    Acteur principal  & Étudiant \\
+    \hline
+    Préconditions     & Étudiant authentifié, cours non encore acheté \\
+    \hline
+    Scénario nominal  &
+      1.~L'étudiant voit le bouton « Acheter » sur le cours payant.\newline
+      2.~Il clique \textrightarrow{} POST \texttt{/api/purchase/initiate}.\newline
+      3.~Le backend crée un achat en statut « Pending ».\newline
+      4.~Flouci retourne une URL de paiement.\newline
+      5.~Redirection vers la page Flouci.\newline
+      6.~Après paiement~: GET \texttt{/api/purchase/\{id\}/verify}.\newline
+      7.~Statut passe à « Completed », email envoyé. \\
+    \hline
+    Alt. 1            & Flouci non configuré (dev)~: simulation automatique \\
+    \hline
+    Alt. 2            & Paiement refusé~: statut « Failed » \\
+    \hline
+    Postconditions    & Accès au cours débloqué, chapitre 1 accessible \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+\subsection{Scénario : Progresser dans un chapitre}
+
+\begin{table}[H]
+  \centering
+  \caption{Description textuelle du cas d'utilisation « Progresser dans un chapitre »}
+  \label{tab:sc_progression}
+  \begin{tabularx}{\textwidth}{|l|X|}
+    \hline
+    Acteur principal  & Étudiant \\
+    \hline
+    Préconditions     & Étudiant inscrit au cours, chapitre précédent complété \\
+    \hline
+    Scénario nominal  &
+      1.~L'étudiant clique sur le chapitre $N$.\newline
+      2.~POST \texttt{/api/chapters/\{id\}/access} -- l'\ac{IA} enregistre l'accès.\newline
+      3.~Le système vérifie le déverrouillage.\newline
+      4.~L'étudiant consulte les leçons et télécharge les \ac{PDF}s.\newline
+      5.~Toutes les 30\,s~: PUT \texttt{/api/chapters/\{id\}/time}.\newline
+      6.~L'étudiant passe le quiz \textrightarrow{} feedback \ac{IA}.\newline
+      7.~POST \texttt{/api/chapters/\{id\}/complete} \textrightarrow{} chapitre validé.\newline
+      8.~Si dernier chapitre~: certificat \ac{PDF} généré automatiquement. \\
+    \hline
+    Alt. 1            & Chapitre précédent non complété~: message de verrouillage \\
+    \hline
+    Alt. 2            & Quiz non réussi~: message d'encouragement, nouvelle tentative \\
+    \hline
+    Postconditions    & \texttt{ChapterProgress} mis à jour, chapitre $N+1$ déverrouillé \\
+    \hline
+  \end{tabularx}
+\end{table}
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Ce chapitre a permis l'identification et la formalisation rigoureuse de toutes les
+exigences fonctionnelles et non fonctionnelles de la plateforme EduBoard. La
+modélisation \ac{UML} jette les bases solides de la conception détaillée présentée dans le chapitre suivant.

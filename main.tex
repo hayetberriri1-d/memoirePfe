@@ -1,0 +1,175 @@
+% ============================================================
+%  EduBoard – Plateforme E-Learning Intelligente avec IA
+%  Rapport de Projet de Fin d'Études – ESPITA 2025/2026
+%  Auteure : Hayet BERRIRI
+% ============================================================
+\documentclass[12pt, a4paper, twoside]{report}
+
+% ---- Encodage & langue ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ---- Mise en page ----
+\usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+
+% ---- Typographie ----
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ---- Graphiques & couleurs ----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{pdfpages}
+\graphicspath{{figures/images/}{figures/diagrams/}{figures/pdfs/}}
+
+% ---- Tableaux ----
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{tabularx}
+
+% ---- Code source ----
+\usepackage{listings}
+\usepackage{minted}   % requiert --shell-escape
+
+% ---- Liens & références ----
+\usepackage[hidelinks, colorlinks=true,
+            linkcolor=espitablue,
+            urlcolor=espitablue,
+            citecolor=espitablue]{hyperref}
+\usepackage{amsmath, amssymb}
+% ---- Divers ----
+\usepackage{acronym}
+\usepackage{pifont}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{amsmath, amssymb}
+\usepackage{titlesec}   % personnalisation des titres
+
+% ============================================================
+%  COULEURS – extraites du PDF original
+% ============================================================
+\definecolor{espitablue}{RGB}{31, 78, 151}   % bleu foncé principal
+\definecolor{headergray}{RGB}{89, 89, 89}    % gris en-tête (non utilisé ici)
+
+% ============================================================
+%  STYLE DES TITRES – bleu, comme dans le PDF
+% ============================================================
+% Chapitre : "Chapitre N" en petit bleu, titre en grand bleu
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{espitablue}}
+  {\large Chapitre \thechapter}
+  {4pt}
+  {\Huge}
+
+% Section : bleu gras
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{espitablue}}
+  {\thesection}{1em}{}
+
+% Subsection : bleu gras
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{espitablue}}
+  {\thesubsection}{1em}{}
+
+% Subsubsection : bleu normal
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{espitablue}}
+  {\thesubsubsection}{1em}{}
+
+% ============================================================
+%  EN-TÊTES – style exact du PDF original
+%  Gauche (pages paires) : EduBoard – Plateforme E-Learning Intelligente  (bleu italique)
+%  Droite (pages impaires) :  Hayet BERRIRI  (bleu italique)
+%  Ligne de séparation en dessous
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+
+% Pages paires (gauche) : titre du rapport | pages impaires (droite) : auteure
+\fancyhead[LE]{\textcolor{espitablue}{\textit{EduBoard -- Plateforme E-Learning Intelligente}}}
+\fancyhead[RO]{\textcolor{espitablue}{\textit{Hayet BERRIRI}}}
+
+% Numéro de page centré en pied de page
+\fancyfoot[C]{\thepage}
+
+% Ligne d'en-tête en bleu, épaisseur 0.4pt
+\renewcommand{\headrule}{%
+  {\color{espitablue}\hrule width\headwidth height 0.4pt}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Ligne de pied de page fine
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\footrule}{%
+  {\color{espitablue}\hrule width\headwidth height 0.4pt}}
+
+% Style pour les pages de début de chapitre (plain)
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0.4pt}%
+  \renewcommand{\footrule}{{\color{espitablue}\hrule width\headwidth height 0.4pt}}%
+}
+
+% ============================================================
+%  LÉGENDES – petites et centrées
+% ============================================================
+\captionsetup{font=small, labelfont={bf,color=espitablue}, textfont=it}
+
+% ============================================================
+\begin{document}
+
+% ---- Page de garde ----
+\input{chapters/01_page_garde}
+
+% ---- Dédicaces ----
+\input{chapters/02_dedicaces}
+
+% ---- Remerciements ----
+\input{chapters/03_remerciements}
+
+% ---- Front matter ----
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\tableofcontents
+\clearpage
+
+\listoffigures
+\clearpage
+
+\listoftables
+\clearpage
+
+% ---- Liste des abréviations ----
+\input{chapters/00_acronymes_def}
+\clearpage
+
+% ---- Corps du rapport ----
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{chapters/05_introduction_generale}
+\input{chapters/06_chapitre1_presentation}
+\input{chapters/07_chapitre2_specifications}
+\input{chapters/08_chapitre3_conception}
+\input{chapters/09_chapitre4_realisation}
+\input{chapters/10_conclusion_generale}
+
+% ---- Bibliographie ----
+\input{chapters/11_bibliographie}
+
+% ---- Annexes ----
+\appendix
+\input{chapters/12_annexes}
+
+\end{document}

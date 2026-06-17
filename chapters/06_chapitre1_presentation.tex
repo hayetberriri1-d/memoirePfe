@@ -1,0 +1,185 @@
+% ============================================================
+%  06_chapitre1_presentation.tex  –  Chapitre 1 : Contexte Général
+% ============================================================
+\chapter{Contexte Général du Projet}
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Ce premier chapitre pose les bases de notre travail. Il présente l'organisation hôte,
+le problème auquel notre solution répond, l'étude de la situation existante, la solution
+adoptée et la méthodologie de travail choisie.
+
+% ------------------------------------------------------------
+\section{Cadre du Projet}
+
+\subsection{Présentation de l'organisme d'accueil : Whitecape Technologies}
+
+Whitecape Technologies est une entreprise franco-tunisienne spécialisée dans le
+développement de solutions informatiques sur mesure. Située à Sousse, en Tunisie,
+l'entreprise possède une vaste expérience en gestion de projets tant localement qu'en
+modèle nearshore. Whitecape Technologies se distingue par son expertise dans la
+création de solutions innovantes adaptées aux besoins spécifiques de chaque client,
+en s'appuyant sur des équipes pluridisciplinaires et hautement qualifiées.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.35\textwidth]{whitecape_technologies_logo.jpg}
+  \caption{Logo de Whitecape Technologies}
+  \label{fig:logo_whitecape}
+\end{figure}
+
+\subsection{Objectif et Contexte}
+
+Fondée en 2007, Whitecape Technologies vise à devenir un leader dans le secteur
+des technologies de l'information en Tunisie et au-delà. L'entreprise se concentre
+sur la fourniture de solutions technologiques avancées pour aider les entreprises à
+optimiser leurs opérations, améliorer leur productivité et atteindre leurs objectifs
+stratégiques.
+
+\subsection{Services et Solutions}
+
+\paragraph{Développement et ingénierie}
+\begin{itemize}
+  \item Développement d'applications web dynamiques et interactives.
+  \item Développement d'applications mobiles iOS et Android.
+  \item Solutions sur mesure et DevOps / automatisation (\ac{CI}/\ac{CD}).
+\end{itemize}
+
+\paragraph{Consultation en technologie}
+Audit, évaluation et définition de la feuille de route technologique.
+
+\paragraph{Intégration des systèmes}
+Intégration ERP et CRM, support technique, maintenance préventive et corrective.
+
+\paragraph{Services d'Assurance Qualité}
+Tests manuels et automatisés, frameworks d'automatisation, audits qualité.
+
+\medskip
+\noindent\textbf{Fiche technique :}
+\begin{itemize}
+  \item \textbf{Entreprise :} Whitecape Technologies
+  \item \textbf{Email :} \href{mailto:info@whitecapetech.com}{info@whitecapetech.com}
+  \item \textbf{Téléphone :} +216 31 20 88 88 – +33 5 32 10 80 56
+  \item \textbf{Adresse :} Avenue de la République, Akouda 4022, Sousse – Tunisie
+  \item \textbf{Site web :} \url{https://www.whitecapetech.com}
+\end{itemize}
+
+\subsection{Problématique}
+
+Le marché de la formation en ligne connaît une croissance exponentielle. Cependant,
+les solutions existantes présentent des lacunes majeures~:
+
+\begin{itemize}
+  \item \textbf{Absence de personnalisation} des parcours selon le niveau et le rythme
+        de chaque apprenant.
+  \item \textbf{Évaluations statiques} sans feedback pédagogique contextuel.
+  \item \textbf{Absence d'assistance 24h/24} pour accompagner l'étudiant.
+  \item \textbf{Taux d'abandon élevé} dû au manque de motivation.
+  \item \textbf{Gestion administrative lourde} pour enseignants et administrateurs.
+\end{itemize}
+
+\medskip
+La question centrale est donc~:
+
+\begin{quote}
+\textit{Comment concevoir une plateforme e-learning moderne, scalable et intelligente,
+qui exploite l'\ac{IA} générative pour personnaliser l'expérience de chaque apprenant
+tout en simplifiant la gestion pour les enseignants et administrateurs~?}
+\end{quote}
+
+\subsection{Étude de l'existant}
+
+\begin{table}[H]
+  \centering
+  \caption{Analyse comparative des plateformes e-learning existantes}
+  \label{tab:existant}
+  \begin{tabularx}{\textwidth}{lXXc}
+    \toprule
+    \textbf{Plateforme} & \textbf{Points forts} & \textbf{Limitations} & \textbf{\ac{IA}~?} \\
+    \midrule
+    Moodle      & Open source, flexible, large communauté & Interface vieillissante, installation complexe & Non \\
+    \midrule
+    Udemy       & Large catalogue (200k+ cours), mobile  & Pas de personnalisation du parcours & Partiel \\
+    \midrule
+    Coursera    & Certifications reconnues, partenariats universités & Coûteux, peu adapté PME tunisiennes & Partiel \\
+    \midrule
+    Google Classroom & Intégration Google, simplicité & Très limité, pas de marketplace & Non \\
+    \midrule
+    \textbf{EduBoard} & IA complète, multi-rôles, chapitres verrouillés, certificats auto & Solution en développement & \textbf{Oui (complet)} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Solution proposée : EduBoard}
+
+EduBoard est une plateforme e-learning intelligente et complète, développée avec des
+technologies modernes. Elle répond à l'ensemble des lacunes identifiées~:
+
+\begin{enumerate}
+  \item Gestion multi-rôles avec tableau de bord dédié (Admin, Enseignant, Étudiant).
+  \item Cours structurés en chapitres et leçons (article, PDF).
+  \item Chapitres verrouillés séquentiellement : accès au chapitre $N$ conditionné
+        par la complétion du chapitre $N-1$.
+  \item Quiz adaptatifs avec feedback \ac{IA} généré par Claude (Anthropic).
+  \item Chatbot pédagogique 7j/7 propulsé par l'API Groq.
+  \item Moteur de recommandation basé sur le comportement et la progression.
+  \item Génération automatique de certificats PDF via QuestPDF avec QR code.
+  \item Système de paiement Flouci pour les cours payants.
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section{Méthodologie de Travail : SCRUM}
+
+\subsection{Présentation du Framework SCRUM}
+
+\noindent Conformément aux pratiques de gestion de projet adoptées par \textbf{Whitecape Technologies}, le projet EduBoard a été conduit selon une démarche agile inspirée du framework \textbf{SCRUM}. Ce choix se justifie par la nature intrinsèquement évolutive des besoins d'une plateforme e-learning, la nécessité de produire des livrables testables à chaque itération et l'importance d'une communication régulière entre les parties prenantes.
+
+\vspace{0.5cm}
+
+\noindent SCRUM est un cadre de travail agile léger mais puissant, issu de la métaphore du rugby (la mêlée, ou \textit{scrum} en anglais). Il repose sur trois piliers fondamentaux : la \textbf{transparence} (tous les aspects du processus sont visibles par tous), l'\textbf{inspection} (les artefacts et la progression sont régulièrement examinés) et l'\textbf{adaptation} (le plan est ajusté en fonction des résultats des inspections).
+
+\vspace{0.5cm}
+
+\noindent Les éléments constitutifs de SCRUM se déclinent en trois catégories :
+
+\textbf{Rôles :}
+\begin{itemize}
+  \item \textbf{Product Owner :} Représente les intérêts des parties prenantes, gère et priorise le Product Backlog. Dans notre contexte : l'encadrant professionnel Wael Boukadida.
+  \item \textbf{Scrum Master :} Garant de l'application du framework, facilitateur et protecteur de l'équipe. Rôle assumé par l'auteure.
+  \item \textbf{Équipe de Développement :} Auto-organisée et pluridisciplinaire. Composée de l'auteure pour le développement full-stack.
+\end{itemize}
+
+\textbf{Artefacts :}
+\begin{itemize}
+  \item \textbf{Product Backlog :} Liste priorisée de toutes les fonctionnalités souhaitées pour le produit final.
+  \item \textbf{Sprint Backlog :} Sous-ensemble du Product Backlog sélectionné pour le sprint en cours.
+  \item \textbf{Incrément :} Somme de toutes les user stories complétées, constituant une version potentiellement livrable du produit.
+\end{itemize}
+
+\textbf{Cérémonies :}
+\begin{itemize}
+  \item \textbf{Sprint Planning :} Réunion de planification du sprint (objectifs, user stories sélectionnées, estimations).
+  \item \textbf{Daily Scrum :} Point quotidien de 15 minutes (avancement, blocages, plan du jour).
+  \item \textbf{Sprint Review :} Démonstration et validation des fonctionnalités développées.
+  \item \textbf{Sprint Retrospective :} Analyse du processus pour améliorer la productivité et la qualité.
+  \vspace{0.7cm}
+\end{itemize}
+
+\begin{figure}[H]
+    
+  \centering
+  \includegraphics[width=0.85\textwidth]
+  {scrum.png}
+  \caption{Cycle de vie du framework SCRUM}
+  \label{fig:scrum}
+\end{figure}
+
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Ce chapitre a posé le cadre du projet~: présentation de l'organisme d'accueil,
+analyse de la problématique et des solutions existantes, définition de la solution
+EduBoard et planification SCRUM. Le chapitre suivant formalise les besoins fonctionnels
+et non fonctionnels de la plateforme.

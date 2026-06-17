@@ -1,0 +1,117 @@
+% ============================================================
+%  12_annexes.tex  –  Annexes
+% ============================================================
+
+% ---- Annexe A : Extrait Program.cs ----
+\chapter{Extrait du Code Source – Program.cs}
+\label{ann:program_cs}
+
+\begin{lstlisting}[language={[Sharp]C}, caption={Configuration de l'injection de dépendances (Program.cs)}, label={lst:program}]
+// Dependency Injection
+builder.Services.AddHttpClient<IAIGradingService, AIGradingService>();
+builder.Services.AddHttpClient<ChatbotService>();
+
+// QuizFeedbackService avec header Anthropic
+builder.Services.AddHttpClient<IQuizFeedbackService, QuizFeedbackService>(
+    client =>
+    {
+        client.DefaultRequestHeaders.Add("x-api-key",
+            builder.Configuration["Anthropic:ApiKey"] ?? "");
+        client.DefaultRequestHeaders.Add(
+            "anthropic-version", "2023-06-01");
+    });
+
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+builder.Services.AddScoped<IProgressService, ProgressService>();
+builder.Services.AddScoped<ICertificateService, CertificateService>();
+builder.Services.AddScoped<IVideoService, VideoService>();
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+\end{lstlisting}
+
+% ---- Annexe B : Migration SQL ----
+\chapter{Migration SQL – Table Purchases}
+\label{ann:sql_purchases}
+
+\begin{lstlisting}[language=SQL, caption={Migration SQL de création de la table Purchases}, label={lst:sql_purchases}]
+CREATE TABLE IF NOT EXISTS Purchases (
+    Id              SERIAL PRIMARY KEY,
+    UserId          INT NOT NULL,
+    CourseId        INT NOT NULL,
+    Amount          DECIMAL(10,2) NOT NULL,
+    Status          VARCHAR(50) DEFAULT 'Pending',
+    PaymentMethod   VARCHAR(50),
+    TransactionRef  VARCHAR(255),
+    CreatedAt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Enrichissement de la table Courses
+ALTER TABLE Courses ADD COLUMN IF NOT EXISTS
+    Price           DECIMAL(10,2) DEFAULT 0;
+ALTER TABLE Courses ADD COLUMN IF NOT EXISTS
+    OriginalPrice   DECIMAL(10,2) DEFAULT 0;
+ALTER TABLE Courses ADD COLUMN IF NOT EXISTS
+    ThumbnailUrl    TEXT;
+ALTER TABLE Courses ADD COLUMN IF NOT EXISTS
+    TotalHours      INT DEFAULT 0;
+ALTER TABLE Courses ADD COLUMN IF NOT EXISTS
+    Rating          DECIMAL(3,2) DEFAULT 0;
+\end{lstlisting}
+
+% ---- Annexe C : Guide d'insertion des captures ----
+\chapter{Guide d'Insertion des Captures d'Écran}
+\label{ann:guide_images}
+
+\begin{center}
+\textbf{Structure recommandée du dossier \texttt{figures/images/}}
+\end{center}
+\begin{table}[H]
+\centering
+\caption{Correspondance fichiers images – contenus}
+\label{tab:images_guide}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\ttfamily}l X}
+\toprule
+\textbf{Fichier} & \textbf{Contenu} \\
+\midrule
+
+\_whitecape.jpg & Logo Whitecape Technologies \\
+scrum.png & Cycle de vie SCRUM \\
+cas\_d\_utilisation\_sprint\_1\_et\_2.png & Diagramme UC global \\
+DIAGRAMME\_DE\_CAS\_D\_UTILISATION\_-\_ETUDIANT.png & Diagramme UC étudiant \\
+DIAGRAMME\_DE\_CAS\_D\_UTILISATION\_-\_ENSEIGNANT.png & Diagramme UC enseignant \\
+DIAGRAMME\_DE\_CAS\_D\_UTILISATION\_-\_ADMINISTRATEUR.png & Diagramme UC admin \\
+DIAGRAMME\_D\_ACTIVITE\_-\_INSCRIPTION\_ET\_AUTHENTIFICATION.png & Diagramme activité auth \\
+DIAGRAMME\_D\_ACTIVITE\_-\_ACHAT\_D\_UN\_COURS.png & Diagramme activité achat \\
+DIAGRAMME\_D\_ACTIVITE\_-\_PASSAGE\_D\_UN\_QUIZ.png & Diagramme activité quiz \\
+DIAGRAMME\_DE\_SEQUENCE\_-\_AUTHENTIFICATION\_JWT.png & Diagramme séquence auth \\
+DIAGRAMME\_DE\_SEQUENCE\_-\_ACHAT\_D\_UN\_COURS.png & Diagramme séquence achat \\
+DIAGRAMME\_DE\_SEQUENCE\_-\_SOUMISSION\_ET\_FEEDBACK\_IA\_QUIZ.png & Diagramme séquence quiz IA \\
+1710971628400.jpg.png & Diagramme séquence chatbot \\
+DIAGRAMME\_DE\_SEQUENCE\_-\_CREATION\_DE\_COURS\_\_ENSEIGNANT\_.png & Diagramme séquence cours \\
+DIAGRAMME\_DE\_CLASSES\_\_MODELE\_DOMAINE\_.png & Diagramme de classes \\
+DIAGRAMME\_DE\_DEPLOIEMENT.png & Diagramme déploiement \\
+DIAGRAMME\_D\_ETATS-TRANSITIONS\_-\_CYCLE\_DE\_VIE\_D\_UN\_COURS.png & Diagramme états cours \\
+DIAGRAMME\_D\_ETATS-TRANSITIONS\_-\_CYCLE\_DE\_VIE\_D\_UN\_ACHAT.png & Diagramme états achat \\
+capture\_landing.png & Capture page d'accueil \\
+capture\_login.png & Capture page connexion \\
+capture\_register.png & Capture page inscription \\
+capture\_student\_dashboard.png & Dashboard étudiant \\
+capture\_student\_dashboard2.png & Dashboard étudiant (suite) \\
+interfaceteacher1.png & Dashboard enseignant 1 \\
+interfaceteacher2.png & Dashboard enseignant 2 \\
+capture\_admin\_dashboard.png & Dashboard admin \\
+capture\_courses\_list.png & Catalogue des cours \\
+capture\_course\_detail.png & Détail d’un cours \\
+capture\_quiz\_passage.png & Passage de quiz \\
+capture\_quiz\_result.png & Résultats du quiz \\
+capture\_chatbot.png & Interface chatbot \\
+capture\_payment.png & Interface de paiement \\
+capture\_payment\_success.png & Confirmation de paiement \\
+capture\_certificates.png & Page certificats \\
+
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
